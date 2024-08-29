@@ -99,13 +99,13 @@ public class PixKeyService {
         return pixKeys.stream().map(this::mapPixKeyToResponse).collect(toList());
     }
 
-    private void validateUpdateRequest(PixKey existingPixKey, PixKeyRequestDTO request) {
-        if (!existingPixKey.getKeyType().equals(request.keyType())) {
+    private void validateUpdateRequest(PixKey pixKey, PixKeyRequestDTO request) {
+        if (!pixKey.getKeyType().equals(request.keyType())) {
             throw new IllegalArgumentException("O tipo da chave não pode ser alterado");
         }
 
-        if (existingPixKey.getKeyValue().equals(request.keyValue())) {
-            throw new IllegalArgumentException("O valor da chave não pode ser alterado");
+        if (!pixKey.getKeyValue().equals(request.keyValue()) && pixKeyRepository.existsByKeyValue(request.keyValue())) {
+            throw new IllegalArgumentException("Nova chave Pix já cadastrada");
         }
 
         pixKeyValidator.validatePixKeyRequest(request);
