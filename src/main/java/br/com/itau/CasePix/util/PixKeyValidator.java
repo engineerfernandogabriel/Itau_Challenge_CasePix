@@ -94,7 +94,7 @@ public class PixKeyValidator {
             throw new IllegalArgumentException("Nome Inválido");
         }
         if (ownerLastName != null && ownerLastName.length() > 45) {
-            throw new IllegalArgumentException("Sobre Inválido");
+            throw new IllegalArgumentException("Sobrenome Inválido");
         }
     }
 
