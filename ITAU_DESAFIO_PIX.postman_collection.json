@@ -1,0 +1,258 @@
+{
+	"info": {
+		"_postman_id": "39973106-b9e7-4204-9de7-27592ad3e316",
+		"name": "ITAU_DESAFIO_PIX",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "18967738"
+	},
+	"item": [
+		{
+			"name": "Cadastrar Chave Pix",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"keyType\": \"CPF\",\r\n    \"keyValue\": \"95074363080\",\r\n    \"bankAccountType\":\"PESSOA_FISICA\",\r\n    \"accountType\":\"CORRENTE\",\r\n    \"agencyNumber\":\"1240\",\r\n    \"accountNumber\": \"87654321\",\r\n    \"ownerName\": \"Peter\",\r\n    \"ownerLastName\": \"Parker\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:8080/api/pix-keys",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"pix-keys"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Alterar Chave Pix",
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"keyType\": \"ALEATORIO\",\r\n    \"keyValue\": \"HFm572nsTwm18fWmHeAo7uhHfI4WeXOth1fS\",\r\n    \"bankAccountType\":\"PESSOA_FISICA\",\r\n    \"accountType\":\"CORRENTE\",\r\n    \"agencyNumber\":\"1240\",\r\n    \"accountNumber\": \"12345678\",\r\n    \"ownerName\": \"Barry\",\r\n    \"ownerLastName\": \"Allen\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:8080/api/pix-keys/6cbeadb7-38be-4a2a-b0e6-867a876372a0",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"pix-keys",
+						"6cbeadb7-38be-4a2a-b0e6-867a876372a0"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Inativar Chave Pix",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"keyType\": \"ALEATORIO\",\r\n    \"keyValue\": \"a3WJAE3OmVr9tdSEo171w7410y3wqCAtcLO0\",\r\n    \"bankAccountType\":\"PESSOA_FISICA\",\r\n    \"accountType\":\"CORRENTE\",\r\n    \"agencyNumber\":\"1240\",\r\n    \"accountNumber\": \"12345678\",\r\n    \"ownerName\": \"Barry\",\r\n    \"ownerLastName\": \"Allen\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:8080/api/pix-keys/6cbeadb7-38be-4a2a-b0e6-867a876372a0",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"pix-keys",
+						"6cbeadb7-38be-4a2a-b0e6-867a876372a0"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Consulta Pix por ID",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "localhost:8080/api/pix-keys/becb619f-2dd7-4b64-97cc-3ea314cc327f",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"pix-keys",
+						"becb619f-2dd7-4b64-97cc-3ea314cc327f"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Consulta Pix por TIPO",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "localhost:8080/api/pix-keys/by-keyType?type=ALEATORIO",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"pix-keys",
+						"by-keyType"
+					],
+					"query": [
+						{
+							"key": "type",
+							"value": "ALEATORIO"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Consulta Pix por Agencia e Conta",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "localhost:8080/api/pix-keys/by-agency-and-account?agencyNumber=1240&accountNumber=12345678",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"pix-keys",
+						"by-agency-and-account"
+					],
+					"query": [
+						{
+							"key": "agencyNumber",
+							"value": "1240"
+						},
+						{
+							"key": "accountNumber",
+							"value": "12345678"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Consulta Pix por Nome Correntista",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "localhost:8080/api/pix-keys/by-owner-name?ownerName=Barry",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"pix-keys",
+						"by-owner-name"
+					],
+					"query": [
+						{
+							"key": "ownerName",
+							"value": "Barry"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Consulta Pix por Data Criação",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "localhost:8080/api/pix-keys/by-creation-date?start=28/08/2024&end=01/09/2024",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"pix-keys",
+						"by-creation-date"
+					],
+					"query": [
+						{
+							"key": "start",
+							"value": "28/08/2024"
+						},
+						{
+							"key": "end",
+							"value": "01/09/2024"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Consulta Pix por Inativação da Chave",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "localhost:8080/api/pix-keys/by-inactivation-date?start=28/08/2024&end=01/09/2024",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"pix-keys",
+						"by-inactivation-date"
+					],
+					"query": [
+						{
+							"key": "start",
+							"value": "28/08/2024"
+						},
+						{
+							"key": "end",
+							"value": "01/09/2024"
+						}
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
