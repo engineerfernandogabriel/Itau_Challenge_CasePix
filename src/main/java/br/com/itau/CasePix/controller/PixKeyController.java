@@ -33,39 +33,21 @@ public class PixKeyController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<?> updatePixKey(@PathVariable UUID id, @Valid @RequestBody PixKeyRequestDTO request) {
-        try {
-            PixKeyResponseDTO response = pixKeyService.updatePixKey(id, request);
-            return ResponseEntity.ok(response);
-        } catch (EntityNotFoundException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Chave Pix não encontrada");
-        } catch (IllegalStateException e) {
-            return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY).body(e.getMessage());
-        } catch (IllegalArgumentException e) {
-            return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY).body(e.getMessage());
-        }
+    public ResponseEntity<PixKeyResponseDTO> updatePixKey(@PathVariable UUID id, @Valid @RequestBody PixKeyRequestDTO request) {
+        PixKeyResponseDTO response = pixKeyService.updatePixKey(id, request);
+        return ResponseEntity.ok(response);
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<?> inactivatePixKey(@PathVariable UUID id) {
-        try {
-            PixKeyResponseDTO response = pixKeyService.inactivatePixKey(id);
-            return ResponseEntity.ok(response);
-        } catch (EntityNotFoundException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Chave Pix não encontrada");
-        } catch (IllegalStateException e) {
-            return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY).body("Chave Pix já está inativa");
-        }
+    public ResponseEntity<PixKeyResponseDTO> inactivatePixKey(@PathVariable UUID id) {
+        PixKeyResponseDTO response = pixKeyService.inactivatePixKey(id);
+        return ResponseEntity.ok(response);
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<PixKeyResponseDTO> getPixKeyById(@PathVariable UUID id) {
-        try {
-            PixKeyResponseDTO response = pixKeyService.getPixKeyById(id);
-            return ResponseEntity.ok(response);
-        } catch (EntityNotFoundException e) {
-            return ResponseEntity.notFound().build();
-        }
+        PixKeyResponseDTO response = pixKeyService.getPixKeyById(id);
+        return ResponseEntity.ok(response);
     }
 
     @GetMapping("/by-keyType")
@@ -104,10 +86,5 @@ public class PixKeyController {
 
         List<PixKeyResponseDTO> pixKeys = pixKeyService.getPixKeysByInactivationDateRange(start, end);
         return ResponseEntity.ok(pixKeys);
-    }
-
-    @ExceptionHandler(IllegalArgumentException.class)
-    public ResponseEntity<String> handleIllegalArgumentException(IllegalArgumentException e) {
-        return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY).body(e.getMessage());
     }
 }

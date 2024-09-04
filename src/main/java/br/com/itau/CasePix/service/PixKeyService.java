@@ -2,6 +2,9 @@ package br.com.itau.CasePix.service;
 
 import br.com.itau.CasePix.dto.PixKeyRequestDTO;
 import br.com.itau.CasePix.dto.PixKeyResponseDTO;
+import br.com.itau.CasePix.exception.InvalidPixKeyException;
+import br.com.itau.CasePix.exception.PixKeyAlreadyExistsException;
+import br.com.itau.CasePix.exception.PixKeyNotFoundException;
 import br.com.itau.CasePix.model.PixKey;
 import br.com.itau.CasePix.model.PixKeyType;
 import br.com.itau.CasePix.repository.PixKeyRepository;
@@ -30,8 +33,17 @@ public class PixKeyService {
 
     @Transactional
     public PixKeyResponseDTO createPixKey(PixKeyRequestDTO request) {
-        pixKeyValidator.validateKeyLimit(request.bankAccountType(), request.accountNumber());
-        pixKeyValidator.validatePixKeyRequest(request);
+        try {
+            pixKeyValidator.validateKeyLimit(request.bankAccountType(), request.accountNumber());
+            pixKeyValidator.validatePixKeyRequest(request);
+        } catch (IllegalArgumentException e) {
+            throw new InvalidPixKeyException(e.getMessage());
+        }
+
+        if (pixKeyRepository.existsByKeyValue(request.keyValue())) {
+            throw new PixKeyAlreadyExistsException("Chave Pix já cadastrada");
+        }
+
         PixKey pixKey = mapRequestToPixKey(request);
         pixKey.setCreatedAt(LocalDateTime.now());
         pixKey = pixKeyRepository.save(pixKey);
@@ -41,10 +53,10 @@ public class PixKeyService {
     @Transactional
     public PixKeyResponseDTO updatePixKey(UUID id, PixKeyRequestDTO request) {
         PixKey pixKey = pixKeyRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("Chave Pix não encontrada"));
+                .orElseThrow(() -> new PixKeyNotFoundException("Chave Pix não encontrada"));
 
         if (pixKey.getInactivatedAt() != null) {
-            throw new IllegalStateException("Não é possível alterar uma chave inativada");
+            throw new InvalidPixKeyException("Não é possível alterar uma chave inativada");
         }
 
         validateUpdateRequest(pixKey, request);
@@ -57,10 +69,10 @@ public class PixKeyService {
     @Transactional
     public PixKeyResponseDTO inactivatePixKey(UUID id) {
         PixKey pixKey = pixKeyRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("Chave Pix não encontrada"));
+                .orElseThrow(() -> new PixKeyNotFoundException("Chave Pix não encontrada"));
 
         if (pixKey.getInactivatedAt() != null) {
-            throw new IllegalStateException("Chave Pix já inativa");
+            throw new InvalidPixKeyException("Chave Pix já inativa");
         }
 
         pixKey.setInactivatedAt(LocalDateTime.now());
@@ -70,7 +82,7 @@ public class PixKeyService {
 
     public PixKeyResponseDTO getPixKeyById(UUID id) {
         PixKey pixKey = pixKeyRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("Chave Pix não encontrada"));
+                .orElseThrow(() -> new PixKeyNotFoundException("Chave Pix não encontrada"));
         return mapPixKeyToResponse(pixKey);
     }
 
@@ -101,14 +113,18 @@ public class PixKeyService {
 
     private void validateUpdateRequest(PixKey pixKey, PixKeyRequestDTO request) {
         if (!pixKey.getKeyType().equals(request.keyType())) {
-            throw new IllegalArgumentException("O tipo da chave não pode ser alterado");
+            throw new InvalidPixKeyException("O tipo da chave não pode ser alterado");
         }
 
         if (!pixKey.getKeyValue().equals(request.keyValue()) && pixKeyRepository.existsByKeyValue(request.keyValue())) {
-            throw new IllegalArgumentException("Nova chave Pix já cadastrada");
+            throw new PixKeyAlreadyExistsException("Nova chave Pix já cadastrada");
         }
 
-        pixKeyValidator.validatePixKeyRequest(request);
+        try {
+            pixKeyValidator.validatePixKeyRequest(request);
+        } catch (IllegalArgumentException e) {
+            throw new InvalidPixKeyException(e.getMessage());
+        }
     }
 
     private PixKey mapRequestToPixKey(PixKeyRequestDTO request) {
